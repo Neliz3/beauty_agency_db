@@ -1,3 +1,32 @@
+# Beauty Agency
+### Database Schema
+
+This is the database schema for the project:
+
+![ERD](ERD.png)
+### Files description
+
+1) create_tables_script.sql - script for tables creation.
+2) create_view.sql - script for view creation.
+3) create_user.sql - script for adding user and for granting some privileges.
+4) main.py - python script that inserts some data into tables.
+
+### Requirements
+
+- Python 3.9.6
+- MySQL Server
+- `mysql-connector-python` package
+- `python-dotenv` package
+
+### How to run main.py
+- Run script.sql in your database.
+- Set environment variables (host, user, password, database).
+- Run: 
+- ```sh 
+  pip install -r requirements.txt
+- Run main.py.
+
+
 # Practical assignment 3
 
 ## The purpose of this task
@@ -29,116 +58,3 @@ You can work alone or in pairs with a colleague (maximum 2 people in a team). In
 - Create trigger or function **_+0.5_**
 
 Meeting the basic requirements of Practical Assignment 3 allows for a maximum of 22 points to be earned, and completing additional tasks listed under the heading "Additional points" can yield up to 2 extra points.
-
-
-## Additional info
-I suggest you look at my example of the execution of a part of the task, which is described below (Schedule Demo).
-
-## Schedule Demo
-### Database Schema
-
-This is the database schema for the project:
-
-```mermaid
-erDiagram
-    STUDENTS {
-        VARCHAR(36) ID PK
-        VARCHAR(200) FIRST_NAME
-        VARCHAR(200) LAST_NAME
-        VARCHAR(200) EMAIL
-        VARCHAR(20) PHONE
-        INT COURSE
-        VARCHAR(20) EDUCATIONAL_DEGREE
-        VARCHAR(20) SPECIALITY
-        BOOLEAN ACTIVE
-    }
-
-    ROOMS {
-        VARCHAR(36) ID PK
-        VARCHAR(200) BUILDING
-        INT FLOOR
-        INT NUMBER
-        VARCHAR(200) DISPLAY_NAME
-        INT SEATS_NUMBER
-    }
-
-    COURSES {
-        VARCHAR(36) ID PK
-        VARCHAR(36) COURSE_DISPLAY_SHORT_NAME
-        VARCHAR(200) COURSE_DISPLAY_FULL_NAME
-        VARCHAR(500) COURSE_DESCRIPTION
-        INT LECTURES_NUM
-        INT PRACTICES_NUM
-    }
-
-    INSTRUCTORS {
-        VARCHAR(36) ID PK
-        VARCHAR(200) FIRST_NAME
-        VARCHAR(200) LAST_NAME
-        VARCHAR(200) EMAIL
-        VARCHAR(20) PHONE
-        BOOL ACTIVE
-    }
-
-    LESSONS_SCHEDULE {
-        INT ID PK
-        TIME START_TIME
-        TIME END_TIME
-    }
-
-    INSTRUCTORS_COURSES {
-        VARCHAR(36) INSTRUCTOR_ID
-        VARCHAR(36) COURSE_ID
-    }
-
-    STUDENTS_COURSE_GROUPS {
-        VARCHAR(36) ID PK
-        VARCHAR(36) COURSE_ID
-    }
-
-    STUDENTS_COURSE_GROUP_STUDENTS {
-        VARCHAR(36) STUDENT_ID
-        VARCHAR(36) GROUP_ID
-    }
-
-    SCHEDULE {
-        INT ID PK
-        VARCHAR(36) COURSE_ID
-        VARCHAR(36) INSTRUCTOR_ID
-        VARCHAR(36) STUDENTS_COURSE_GROUP_ID
-        VARCHAR(20) WEEK_DAY
-        INT LESSON_SCHEDULE_ID
-        VARCHAR(36) ROOM_ID
-    }
-
-    STUDENTS ||--o{ STUDENTS_COURSE_GROUP_STUDENTS: "belongs to"
-    STUDENTS_COURSE_GROUPS ||--o{ STUDENTS_COURSE_GROUP_STUDENTS: "includes"
-    STUDENTS_COURSE_GROUPS ||--o{ SCHEDULE: "has"
-    COURSES ||--o{ SCHEDULE: "includes"
-    INSTRUCTORS ||--o{ INSTRUCTORS_COURSES: "teaches"
-    COURSES ||--o{ INSTRUCTORS_COURSES: "is taught by"
-    INSTRUCTORS ||--o{ SCHEDULE: "teaches"
-    LESSONS_SCHEDULE ||--o{ SCHEDULE: "is scheduled for"
-    ROOMS ||--o{ SCHEDULE: "takes place in"
-```
-### Files description
-
-1) create_tables_script.sql - script for tables creation.
-2) create_view.sql - script for view creation.
-3) create_user.sql - script for adding user and for granting some privileges.
-4) main.py - python script that inserts some data into tables.
-
-### Requirements
-
-- Python 3.9.6
-- MySQL Server
-- `mysql-connector-python` package
-- `python-dotenv` package
-
-### How to run main.py
-- Run script.sql in your database.
-- Set environment variables (host, user, password, database).
-- Run: 
-- ```sh 
-  pip install -r requirements.txt
-- Run main.py.
