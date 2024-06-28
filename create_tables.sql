@@ -1,200 +1,106 @@
-CREATE DATABASE UNI_DB;
+USE beauty_agency;
 
-USE UNI_DB;
-
-
--- DROP TABLE IF EXISTS STUDENTS;
-CREATE TABLE IF NOT EXISTS STUDENTS
+CREATE TABLE IF NOT EXISTS `businesses`
 (
-	ID VARCHAR(36) PRIMARY KEY,
-	FIRST_NAME VARCHAR(200) NOT NULL,
-	LAST_NAME VARCHAR(200) NOT NULL,
-	EMAIL VARCHAR(200) NOT NULL,
-	PHONE VARCHAR(20) NOT NULL,
-	COURSE INT,
-	EDUCATIONAL_DEGREE VARCHAR(20),
-	SPECIALITY VARCHAR(20),
-	ACTIVE BOOLEAN
+    `id`           int PRIMARY KEY AUTO_INCREMENT,
+    `name`         varchar(255),
+    `service_name` varchar(255) UNIQUE,
+    `password`     varchar(128),
+    `field`        varchar(10)
 );
 
-ALTER TABLE STUDENTS
-COMMENT = 'Table to store student information';
+ALTER TABLE businesses
+    COMMENT = 'Table to store business information';
 
-ALTER TABLE STUDENTS
-MODIFY COLUMN ID VARCHAR(36) COMMENT 'Unique identifier for each student',
-MODIFY COLUMN FIRST_NAME VARCHAR(200) NOT NULL COMMENT 'First name of the student',
-MODIFY COLUMN LAST_NAME VARCHAR(200) NOT NULL COMMENT 'Last name of the student',
-MODIFY COLUMN EMAIL VARCHAR(200) NOT NULL COMMENT 'Email address of the student',
-MODIFY COLUMN PHONE VARCHAR(20) NOT NULL COMMENT 'Phone number of the student',
-MODIFY COLUMN COURSE INT COMMENT 'Course number the student is enrolled in',
-MODIFY COLUMN EDUCATIONAL_DEGREE VARCHAR(20) COMMENT 'Educational degree of the student',
-MODIFY COLUMN SPECIALITY VARCHAR(20) COMMENT 'Speciality of the student',
-MODIFY COLUMN ACTIVE BOOLEAN COMMENT 'Indicates whether the student is active or not';
+ALTER TABLE businesses
+    MODIFY COLUMN ID INT COMMENT 'Unique identifier for each entry',
+    MODIFY COLUMN name VARCHAR(255) COMMENT 'Name of a business',
+    MODIFY COLUMN service_name VARCHAR(255) COMMENT 'List of services',
+    MODIFY COLUMN password VARCHAR(128) COMMENT 'Password of a business user',
+    MODIFY COLUMN field varchar(10) COMMENT 'field of a business';
 
 
-
--- DROP TABLE IF EXISTS ROOMS;
-CREATE TABLE IF NOT EXISTS ROOMS
+CREATE TABLE IF NOT EXISTS `customers`
 (
-	ID VARCHAR(36) PRIMARY KEY,
-	BUILDING VARCHAR(200),
-	FLOOR INT,
-	NUMBER INT,
-	DISPLAY_NAME VARCHAR(200),
-	SEATS_NUMBER INT
+    `id`                 int PRIMARY KEY AUTO_INCREMENT,
+    `email`              varchar(255),
+    `phone`              varchar(20),
+    `password`           varchar(128),
+    `age`                smallint,
+    `preference_service` int UNIQUE
 );
 
-ALTER TABLE ROOMS
-COMMENT = 'Table to store room information';
+ALTER TABLE customers
+    COMMENT = 'Table to store customer information and credentials';
 
-ALTER TABLE ROOMS
-MODIFY COLUMN ID VARCHAR(36) COMMENT 'Unique identifier for each room',
-MODIFY COLUMN BUILDING VARCHAR(200) COMMENT 'Building where the room is located',
-MODIFY COLUMN FLOOR INT COMMENT 'Floor number where the room is located',
-MODIFY COLUMN NUMBER INT COMMENT 'Room number',
-MODIFY COLUMN DISPLAY_NAME VARCHAR(200) COMMENT 'Display name of the room',
-MODIFY COLUMN SEATS_NUMBER INT COMMENT 'Number of seats available in the room';
-
-
+ALTER TABLE customers
+    MODIFY COLUMN ID INT COMMENT 'Unique identifier for each entry',
+    MODIFY COLUMN email VARCHAR(255) COMMENT 'Email of a customer',
+    MODIFY COLUMN phone VARCHAR(20) COMMENT 'Phone of a customer',
+    MODIFY COLUMN password VARCHAR(128) COMMENT 'Password of a customer',
+    MODIFY COLUMN age smallint COMMENT 'Age of a customer',
+    MODIFY COLUMN preference_service INT COMMENT 'Foreign key for services_id';
 
 
--- DROP TABLE IF EXISTS COURSES;
-CREATE TABLE COURSES
+CREATE TABLE IF NOT EXISTS `services`
 (
-	ID VARCHAR(36) PRIMARY KEY,
-	COURSE_DISPLAY_SHORT_NAME VARCHAR(36),
-	COURSE_DISPLAY_FULL_NAME VARCHAR(200),
-	COURSE_DESCRIPTION VARCHAR(500),
-	LECTURES_NUM INT,
-	PRACTICES_NUM INT
+    `id`    int PRIMARY KEY AUTO_INCREMENT,
+    `name`  varchar(255),
+    `price` decimal(10, 2),
+
+    FOREIGN KEY (`name`) REFERENCES `businesses` (`service_name`)
+        ON DELETE CASCADE
 );
 
-ALTER TABLE COURSES
-COMMENT = 'Table to store course information';
+ALTER TABLE services
+    COMMENT = 'Table to store services information';
 
-ALTER TABLE COURSES
-MODIFY COLUMN ID VARCHAR(36) COMMENT 'Unique identifier for each course',
-MODIFY COLUMN COURSE_DISPLAY_SHORT_NAME VARCHAR(36) COMMENT 'Short name of the course',
-MODIFY COLUMN COURSE_DISPLAY_FULL_NAME VARCHAR(200) COMMENT 'Full name of the course',
-MODIFY COLUMN COURSE_DESCRIPTION VARCHAR(500) COMMENT 'Description of the course',
-MODIFY COLUMN LECTURES_NUM INT COMMENT 'Number of lectures in the course',
-MODIFY COLUMN PRACTICES_NUM INT COMMENT 'Number of practice sessions in the course';
+ALTER TABLE services
+    MODIFY COLUMN ID INT COMMENT 'Unique identifier for each entry',
+    MODIFY COLUMN name VARCHAR(255) COMMENT '   Title of a service',
+    MODIFY COLUMN price decimal(10, 2) COMMENT 'Price of a service';
 
--- DROP TABLE IF EXISTS INSTRUCTORS;
-CREATE TABLE IF NOT EXISTS INSTRUCTORS
+
+CREATE TABLE IF NOT EXISTS `orders`
 (
-	ID VARCHAR(36) PRIMARY KEY,
-	FIRST_NAME VARCHAR(200),
-	LAST_NAME VARCHAR(200),
-	EMAIL VARCHAR(200),
-	PHONE VARCHAR(20),
-	ACTIVE BOOL
+    `id`           int PRIMARY KEY AUTO_INCREMENT,
+    `customer_id`  int,
+    `service_id`   int,
+    `price`        decimal(10, 2),
+    `order_number` char(5),
+
+    FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`)
+        ON DELETE CASCADE,
+    FOREIGN KEY (`service_id`) REFERENCES `services` (`id`)
+        ON DELETE CASCADE
 );
 
-ALTER TABLE INSTRUCTORS
-COMMENT = 'Table to store instructor information';
+ALTER TABLE orders
+    COMMENT = 'Table to store orders information';
 
-ALTER TABLE INSTRUCTORS
-MODIFY COLUMN ID VARCHAR(36) COMMENT 'Unique identifier for each instructor',
-MODIFY COLUMN FIRST_NAME VARCHAR(200) COMMENT 'First name of the instructor',
-MODIFY COLUMN LAST_NAME VARCHAR(200) COMMENT 'Last name of the instructor',
-MODIFY COLUMN EMAIL VARCHAR(200) COMMENT 'Email address of the instructor',
-MODIFY COLUMN PHONE VARCHAR(20) COMMENT 'Phone number of the instructor',
-MODIFY COLUMN ACTIVE BOOL COMMENT 'Indicates whether the instructor is active or not';
+ALTER TABLE orders
+    MODIFY COLUMN ID INT COMMENT 'Unique identifier for each entry',
+    MODIFY COLUMN customer_id int COMMENT 'Foreign key for customer',
+    MODIFY COLUMN service_id int COMMENT 'Foreign key for a service',
+    MODIFY COLUMN price decimal(10, 2) COMMENT 'Price of the order',
+    MODIFY COLUMN order_number char(5) COMMENT 'Number of the order';
 
--- DROP TABLE LESSONS_SCHEDULE;
-CREATE TABLE IF NOT EXISTS LESSONS_SCHEDULE
+
+# Table to store many-to-many customers-services relationships
+CREATE TABLE IF NOT EXISTS `customers_services`
 (
-	ID INT PRIMARY KEY,
-	START_TIME TIME,
-	END_TIME TIME
+    `customers_services_id` int PRIMARY KEY AUTO_INCREMENT,
+    `services_id`                  int,
+    `preference_service`           int,
+
+    FOREIGN KEY (`preference_service`) REFERENCES `customers` (`preference_service`),
+    FOREIGN KEY (`services_id`) REFERENCES `services` (`id`)
 );
 
-ALTER TABLE LESSONS_SCHEDULE
-COMMENT = 'Table to store lessons schedule';
+ALTER TABLE customers_services
+    COMMENT = 'Table to store many-to-many customers-services relationships';
 
-ALTER TABLE LESSONS_SCHEDULE
-MODIFY COLUMN ID INT COMMENT 'Unique identifier for each lesson schedule',
-MODIFY COLUMN START_TIME TIME COMMENT 'Start time of the lesson',
-MODIFY COLUMN END_TIME TIME COMMENT 'End time of the lesson';
-
--- DROP TABLE INSTRUCTORS_COURSES;
-CREATE TABLE IF NOT EXISTS INSTRUCTORS_COURSES(
-	INSTRUCTOR_ID VARCHAR(36),
-	COURSE_ID VARCHAR(36),
-	FOREIGN KEY (INSTRUCTOR_ID) REFERENCES INSTRUCTORS(ID)
-	ON DELETE CASCADE,
-	FOREIGN KEY (COURSE_ID) REFERENCES COURSES(ID)
-	ON DELETE CASCADE
-);
-
-ALTER TABLE INSTRUCTORS_COURSES
-COMMENT = 'Table to store relationship between instructors and courses';
-
-ALTER TABLE INSTRUCTORS_COURSES
-MODIFY COLUMN INSTRUCTOR_ID VARCHAR(36) COMMENT 'Identifier for the instructor',
-MODIFY COLUMN COURSE_ID VARCHAR(36) COMMENT 'Identifier for the course';
-
--- DROP TABLE IF EXISTS STUDENTS_COURSE_GROUPS;
-CREATE TABLE IF NOT EXISTS STUDENTS_COURSE_GROUPS(
-ID VARCHAR(36) PRIMARY KEY,
-COURSE_ID VARCHAR(36)
-);
-
-ALTER TABLE STUDENTS_COURSE_GROUPS
-COMMENT = 'Table to store student course groups';
-
-ALTER TABLE STUDENTS_COURSE_GROUPS
-MODIFY COLUMN ID VARCHAR(36) COMMENT 'Unique identifier for each student course group',
-MODIFY COLUMN COURSE_ID VARCHAR(36) COMMENT 'Identifier for the course';
-
--- DROP TABLE STUDENTS_COURSE_GROUP_STUDENTS;
-CREATE TABLE IF NOT EXISTS STUDENTS_COURSE_GROUP_STUDENTS(
-	STUDENT_ID VARCHAR(36),
-	GROUP_ID VARCHAR(36),
-	FOREIGN KEY (STUDENT_ID) REFERENCES STUDENTS(ID)
-	ON DELETE CASCADE,
-	FOREIGN KEY (GROUP_ID) REFERENCES STUDENTS_COURSE_GROUPS(ID)
-	ON DELETE CASCADE
-);
-
-ALTER TABLE STUDENTS_COURSE_GROUP_STUDENTS
-COMMENT = 'Table to store relationship between students and course groups';
-
-ALTER TABLE STUDENTS_COURSE_GROUP_STUDENTS
-MODIFY COLUMN STUDENT_ID VARCHAR(36) COMMENT 'Identifier for the student',
-MODIFY COLUMN GROUP_ID VARCHAR(36) COMMENT 'Identifier for the student course group';
-
--- DROP TABLE IF EXISTS SCHEDULE;
-CREATE TABLE IF NOT EXISTS SCHEDULE
-(
-	ID INT PRIMARY KEY,
-	COURSE_ID VARCHAR(36),
-	INSTRUCTOR_ID VARCHAR(36),
-	STUDENTS_COURSE_GROUP_ID VARCHAR(36),
-	WEEK_DAY VARCHAR(20),
-	LESSON_SCHEDULE_ID INT,
-	ROOM_ID VARCHAR(36),
-
-	FOREIGN KEY (COURSE_ID) REFERENCES COURSES(ID),
-	FOREIGN KEY (INSTRUCTOR_ID) REFERENCES INSTRUCTORS(ID),
-	FOREIGN KEY (STUDENTS_COURSE_GROUP_ID) REFERENCES STUDENTS_COURSE_GROUPS(ID),
-	FOREIGN KEY (LESSON_SCHEDULE_ID) REFERENCES LESSONS_SCHEDULE(ID),
-	FOREIGN KEY (ROOM_ID) REFERENCES ROOMS(ID),
-
-	UNIQUE KEY SCHEDULE_UNIQUE_KEY (COURSE_ID, INSTRUCTOR_ID, STUDENTS_COURSE_GROUP_ID, ROOM_ID)
-
-);
-
-
-ALTER TABLE SCHEDULE
-COMMENT = 'Table to store schedule information';
-
-ALTER TABLE SCHEDULE
-MODIFY COLUMN ID INT COMMENT 'Unique identifier for each schedule entry',
-MODIFY COLUMN COURSE_ID VARCHAR(36) COMMENT 'Identifier for the course',
-MODIFY COLUMN INSTRUCTOR_ID VARCHAR(36) COMMENT 'Identifier for the instructor',
-MODIFY COLUMN STUDENTS_COURSE_GROUP_ID VARCHAR(36) COMMENT 'Identifier for the student course group',
-MODIFY COLUMN WEEK_DAY VARCHAR(20) COMMENT 'Day of the week for the schedule',
-MODIFY COLUMN LESSON_SCHEDULE_ID INT COMMENT 'Identifier for the lesson schedule',
-MODIFY COLUMN ROOM_ID VARCHAR(36) COMMENT 'Identifier for the room';
+ALTER TABLE customers_services
+    MODIFY COLUMN customers_services_id INT COMMENT 'Unique identifier for each entry',
+    MODIFY COLUMN services_id INT COMMENT 'Identifier for services table',
+    MODIFY COLUMN preference_service INT COMMENT 'Identifier for customer preferences';

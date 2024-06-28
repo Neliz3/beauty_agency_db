@@ -1,4 +1,4 @@
-USE UNI_DB;
+USE beauty_agency;
 
 -- CREATE USER
 

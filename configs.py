@@ -1,5 +1,4 @@
 import mysql.connector
-import mysql.connector
 from mysql.connector import Error
 from dotenv import load_dotenv
 import os
@@ -8,10 +7,10 @@ import os
 load_dotenv()
 
 # Connection settings
-HOST = os.getenv('HOST')
-USER = os.getenv('USER')
-PASSWORD = os.getenv('PASSWORD')
-DATABASE = os.getenv('DATABASE')
+HOST = os.getenv('host')
+USER = os.getenv('user')
+PASSWORD = os.getenv('password')
+DATABASE = os.getenv('database')
 
 
 def create_connection():
@@ -20,7 +19,8 @@ def create_connection():
             host=HOST,
             user=USER,
             password=PASSWORD,
-            database=DATABASE
+            database=DATABASE,
+            auth_plugin='mysql_native_password',
         )
         if connection.is_connected():
             print("Connection to MySQL DB successful")
