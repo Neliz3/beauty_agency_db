@@ -1,8 +1,10 @@
+CREATE DATABASE IF NOT EXISTS beauty_agency;
+
 USE beauty_agency;
 
 CREATE TABLE IF NOT EXISTS `businesses`
 (
-    `id`           int PRIMARY KEY AUTO_INCREMENT,
+    `id`           bigint PRIMARY KEY AUTO_INCREMENT NOT NULL,
     `name`         varchar(255),
     `service_name` varchar(255) UNIQUE,
     `password`     varchar(128),
@@ -13,7 +15,7 @@ ALTER TABLE businesses
     COMMENT = 'Table to store business information';
 
 ALTER TABLE businesses
-    MODIFY COLUMN ID INT COMMENT 'Unique identifier for each entry',
+    MODIFY COLUMN ID BIGINT COMMENT 'Unique identifier for each entry',
     MODIFY COLUMN name VARCHAR(255) COMMENT 'Name of a business',
     MODIFY COLUMN service_name VARCHAR(255) COMMENT 'List of services',
     MODIFY COLUMN password VARCHAR(128) COMMENT 'Password of a business user',
@@ -22,29 +24,29 @@ ALTER TABLE businesses
 
 CREATE TABLE IF NOT EXISTS `customers`
 (
-    `id`                 int PRIMARY KEY AUTO_INCREMENT,
+    `id`                 bigint PRIMARY KEY AUTO_INCREMENT NOT NULL,
     `email`              varchar(255),
     `phone`              varchar(20),
     `password`           varchar(128),
     `age`                smallint,
-    `preference_service` int UNIQUE
+    `preference_service` bigint UNIQUE
 );
 
 ALTER TABLE customers
     COMMENT = 'Table to store customer information and credentials';
 
 ALTER TABLE customers
-    MODIFY COLUMN ID INT COMMENT 'Unique identifier for each entry',
+    MODIFY COLUMN ID BIGINT COMMENT 'Unique identifier for each entry',
     MODIFY COLUMN email VARCHAR(255) COMMENT 'Email of a customer',
     MODIFY COLUMN phone VARCHAR(20) COMMENT 'Phone of a customer',
     MODIFY COLUMN password VARCHAR(128) COMMENT 'Password of a customer',
     MODIFY COLUMN age smallint COMMENT 'Age of a customer',
-    MODIFY COLUMN preference_service INT COMMENT 'Foreign key for services_id';
+    MODIFY COLUMN preference_service BIGINT COMMENT 'Foreign key for services_id';
 
 
 CREATE TABLE IF NOT EXISTS `services`
 (
-    `id`    int PRIMARY KEY AUTO_INCREMENT,
+    `id`    bigint PRIMARY KEY AUTO_INCREMENT NOT NULL,
     `name`  varchar(255),
     `price` decimal(10, 2),
 
@@ -56,16 +58,16 @@ ALTER TABLE services
     COMMENT = 'Table to store services information';
 
 ALTER TABLE services
-    MODIFY COLUMN ID INT COMMENT 'Unique identifier for each entry',
+    MODIFY COLUMN ID BIGINT COMMENT 'Unique identifier for each entry',
     MODIFY COLUMN name VARCHAR(255) COMMENT '   Title of a service',
     MODIFY COLUMN price decimal(10, 2) COMMENT 'Price of a service';
 
 
 CREATE TABLE IF NOT EXISTS `orders`
 (
-    `id`           int PRIMARY KEY AUTO_INCREMENT,
-    `customer_id`  int,
-    `service_id`   int,
+    `id`           bigint PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    `customer_id`  bigint,
+    `service_id`   bigint,
     `price`        decimal(10, 2),
     `order_number` char(5),
 
@@ -79,19 +81,19 @@ ALTER TABLE orders
     COMMENT = 'Table to store orders information';
 
 ALTER TABLE orders
-    MODIFY COLUMN ID INT COMMENT 'Unique identifier for each entry',
-    MODIFY COLUMN customer_id int COMMENT 'Foreign key for customer',
-    MODIFY COLUMN service_id int COMMENT 'Foreign key for a service',
-    MODIFY COLUMN price decimal(10, 2) COMMENT 'Price of the order',
-    MODIFY COLUMN order_number char(5) COMMENT 'Number of the order';
+    MODIFY COLUMN ID BIGINT COMMENT 'Unique identifier for each entry',
+    MODIFY COLUMN customer_id BIGINT COMMENT 'Foreign key for customer',
+    MODIFY COLUMN service_id BIGINT COMMENT 'Foreign key for a service',
+    MODIFY COLUMN price DECIMAL(10, 2) COMMENT 'Price of the order',
+    MODIFY COLUMN order_number CHAR(5) COMMENT 'Number of the order';
 
 
 # Table to store many-to-many customers-services relationships
 CREATE TABLE IF NOT EXISTS `customers_services`
 (
-    `customers_services_id` int PRIMARY KEY AUTO_INCREMENT,
-    `services_id`                  int,
-    `preference_service`           int,
+    `customers_services_id` bigint PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    `services_id`                  bigint,
+    `preference_service`           bigint,
 
     FOREIGN KEY (`preference_service`) REFERENCES `customers` (`preference_service`),
     FOREIGN KEY (`services_id`) REFERENCES `services` (`id`)
@@ -101,6 +103,6 @@ ALTER TABLE customers_services
     COMMENT = 'Table to store many-to-many customers-services relationships';
 
 ALTER TABLE customers_services
-    MODIFY COLUMN customers_services_id INT COMMENT 'Unique identifier for each entry',
-    MODIFY COLUMN services_id INT COMMENT 'Identifier for services table',
-    MODIFY COLUMN preference_service INT COMMENT 'Identifier for customer preferences';
+    MODIFY COLUMN customers_services_id BIGINT COMMENT 'Unique identifier for each entry',
+    MODIFY COLUMN services_id BIGINT COMMENT 'Identifier for services table',
+    MODIFY COLUMN preference_service BIGINT COMMENT 'Identifier for customer preferences';
