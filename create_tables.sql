@@ -159,3 +159,36 @@ ALTER TABLE specialist
     MODIFY COLUMN years_of_experience smallint COMMENT 'Years of an experience of a specialist',
     MODIFY COLUMN services_id BIGINT COMMENT 'Unique identifier for services',
     MODIFY COLUMN business_id BIGINT COMMENT 'Unique identifier for a business';
+
+
+# Table for many-to-many relationships
+CREATE TABLE orders_services (
+  orders_service_id bigint,
+  services_id bigint,
+  PRIMARY KEY (orders_service_id, services_id)
+);
+
+ALTER TABLE orders_services ADD FOREIGN KEY (orders_service_id) REFERENCES orders (service_id);
+
+ALTER TABLE orders_services ADD FOREIGN KEY (services_id) REFERENCES services (id);
+
+
+CREATE TABLE customers_services (
+  customers_id bigint,
+  services_id_customer bigint,
+  PRIMARY KEY (customers_id, services_id_customer)
+);
+
+ALTER TABLE customers_services ADD FOREIGN KEY (customers_id) REFERENCES customers (id);
+
+ALTER TABLE customers_services ADD FOREIGN KEY (services_id_customer) REFERENCES services (id_customer);
+
+CREATE TABLE services_specialist (
+  services_id bigint,
+  specialist_service_id bigint,
+  PRIMARY KEY (services_id, specialist_service_id)
+);
+
+ALTER TABLE services_specialist ADD FOREIGN KEY (services_id) REFERENCES services (id);
+
+ALTER TABLE services_specialist ADD FOREIGN KEY (specialist_service_id) REFERENCES specialist (services_id);
