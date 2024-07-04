@@ -1,9 +1,18 @@
-USE UNI_DB;
+USE beauty_agency;
 
--- CREATE USER
+-- Administrator permissions
+CREATE USER 'administrator'@'localhost' IDENTIFIED BY 'administrator123K@';
+GRANT ALL PRIVILEGES ON beauty_agency.* TO 'administrator'@'localhost';
 
-CREATE USER 'schedule_reader1'@'localhost' IDENTIFIED BY '123456Aa@';
+-- Support permissions
+CREATE USER 'support'@'localhost' IDENTIFIED BY 'support123K@';
+GRANT INSERT, UPDATE, SELECT, RELOAD ON beauty_agency.* TO 'support'@'localhost';
 
-GRANT SELECT ON schedules TO 'schedule_reader1'@'localhost';
+-- Manager permissions
+CREATE USER 'manager'@'localhost' IDENTIFIED BY 'manager123K@';
+GRANT SELECT ON beauty_agency.* TO 'manager'@'localhost';
 
-SHOW GRANTS FOR 'schedule_reader1'@'localhost';
+SHOW GRANTS FOR 'manager'@'localhost';
+
+-- reload changes
+FLUSH PRIVILEGES;
