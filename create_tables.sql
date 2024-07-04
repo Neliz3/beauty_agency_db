@@ -2,13 +2,15 @@ CREATE DATABASE IF NOT EXISTS beauty_agency;
 
 USE beauty_agency;
 
-CREATE TABLE IF NOT EXISTS `businesses`
+CREATE TABLE IF NOT EXISTS businesses
 (
-    `id`           bigint PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    `name`         varchar(255),
-    `service_name` varchar(255) UNIQUE,
-    `password`     varchar(128),
-    `field`        varchar(10)
+    id           bigint NOT NULL AUTO_INCREMENT,
+    name         varchar(255),
+    service_name varchar(255) UNIQUE,
+    password     varchar(128),
+    field        varchar(10),
+
+    PRIMARY KEY (id)
 );
 
 ALTER TABLE businesses
@@ -22,14 +24,14 @@ ALTER TABLE businesses
     MODIFY COLUMN field varchar(10) COMMENT 'field of a business';
 
 
-CREATE TABLE IF NOT EXISTS `customers`
+CREATE TABLE IF NOT EXISTS customers
 (
-    `id`                 bigint PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    `email`              varchar(255),
-    `phone`              varchar(20),
-    `password`           varchar(128),
-    `age`                smallint,
-    `preference_service` bigint UNIQUE
+    id                 bigint NOT NULL AUTO_INCREMENT,
+    email              varchar(255),
+    phone              varchar(20),
+    password           varchar(128),
+    age                smallint,
+    preference_service bigint UNIQUE
 );
 
 ALTER TABLE customers
@@ -44,13 +46,13 @@ ALTER TABLE customers
     MODIFY COLUMN preference_service BIGINT COMMENT 'Foreign key for services_id';
 
 
-CREATE TABLE IF NOT EXISTS `services`
+CREATE TABLE IF NOT EXISTS services
 (
-    `id`    bigint PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    `name`  varchar(255),
-    `price` decimal(10, 2),
+    id    bigint NOT NULL AUTO_INCREMENT,
+    name  varchar(255),
+    price decimal(10, 2),
 
-    FOREIGN KEY (`name`) REFERENCES `businesses` (`service_name`)
+    FOREIGN KEY (name) REFERENCES businesses (service_name)
         ON DELETE CASCADE
 );
 
@@ -63,17 +65,17 @@ ALTER TABLE services
     MODIFY COLUMN price decimal(10, 2) COMMENT 'Price of a service';
 
 
-CREATE TABLE IF NOT EXISTS `orders`
+CREATE TABLE IF NOT EXISTS orders
 (
-    `id`           bigint PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    `customer_id`  bigint,
-    `service_id`   bigint,
-    `price`        decimal(10, 2),
-    `order_number` char(5),
+    id           bigint NOT NULL AUTO_INCREMENT,
+    customer_id  bigint,
+    service_id   bigint,
+    price        decimal(10, 2),
+    order_number char(5),
 
-    FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`)
+    FOREIGN KEY (customer_id) REFERENCES customers (id)
         ON DELETE CASCADE,
-    FOREIGN KEY (`service_id`) REFERENCES `services` (`id`)
+    FOREIGN KEY (service_id) REFERENCES services (id)
         ON DELETE CASCADE
 );
 
@@ -89,14 +91,14 @@ ALTER TABLE orders
 
 
 # Table to store many-to-many customers-services relationships
-CREATE TABLE IF NOT EXISTS `customers_services`
+CREATE TABLE IF NOT EXISTS customers_services
 (
-    `customers_services_id` bigint PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    `services_id`                  bigint,
-    `preference_service`           bigint,
+    customers_services_id bigint NOT NULL AUTO_INCREMENT,
+    services_id                  bigint,
+    preference_service           bigint,
 
-    FOREIGN KEY (`preference_service`) REFERENCES `customers` (`preference_service`),
-    FOREIGN KEY (`services_id`) REFERENCES `services` (`id`)
+    FOREIGN KEY (preference_service) REFERENCES customers (preference_service),
+    FOREIGN KEY (services_id) REFERENCES services (id)
 );
 
 ALTER TABLE customers_services

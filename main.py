@@ -72,3 +72,12 @@ def insert_data():
 
 if __name__ == "__main__":
     insert_data()
+
+# TODO: table structure better
+# TODO: table insert many
+# TODO: check time execution
+# TODO: create indexes
+# TODO: check time execution
+# TODO: create view
+# TODO: create function converter money
+# TODO: create procedure with insert update drop and conditionals
