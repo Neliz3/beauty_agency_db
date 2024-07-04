@@ -1,7 +1,7 @@
 USE beauty_agency;
 
--- view for analyzing customer preferences
-CREATE OR REPLACE VIEW PREFERENCES
+-- view for a customer
+CREATE OR REPLACE VIEW
 AS
 EXPLAIN ANALYZE SELECT
   services.name,

@@ -49,8 +49,7 @@ CREATE TABLE IF NOT EXISTS customers
     age                smallint,
     city               varchar(50),
 
-    PRIMARY KEY (id),
-    FOREIGN KEY (city) REFERENCES cities (city_name) ON DELETE CASCADE
+    PRIMARY KEY (id)
 );
 
 ALTER TABLE customers
@@ -64,6 +63,8 @@ ALTER TABLE customers
     MODIFY COLUMN age smallint COMMENT 'Age of a customer',
     MODIFY COLUMN city VARCHAR(50) COMMENT 'City of a customer';
 
+ALTER TABLE customers ADD FOREIGN KEY (city) REFERENCES cities (city_name) ON DELETE CASCADE;
+
 
 CREATE TABLE IF NOT EXISTS services
 (
@@ -73,12 +74,7 @@ CREATE TABLE IF NOT EXISTS services
     city  varchar(50),
     id_customer bigint,
 
-    PRIMARY KEY (id),
-
-    FOREIGN KEY (name) REFERENCES businesses (service_name)
-    ON DELETE CASCADE,
-    FOREIGN KEY (city) REFERENCES cities (city_name)
-    ON DELETE CASCADE
+    PRIMARY KEY (id)
 );
 
 ALTER TABLE services
@@ -91,6 +87,8 @@ ALTER TABLE services
     MODIFY COLUMN price decimal(10, 2) COMMENT 'Price of a service',
     MODIFY COLUMN city VARCHAR(50) COMMENT 'City of a service';
 
+ALTER TABLE services ADD FOREIGN KEY (name) REFERENCES businesses (service_name) ON DELETE CASCADE;
+ALTER TABLE services ADD FOREIGN KEY (city) REFERENCES cities (city_name) ON DELETE CASCADE;
 
 CREATE TABLE IF NOT EXISTS orders
 (
@@ -101,12 +99,7 @@ CREATE TABLE IF NOT EXISTS orders
     order_number char(5),
     order_date   date,
 
-    PRIMARY KEY (id),
-
-    FOREIGN KEY (customer_id) REFERENCES customers (id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (service_id) REFERENCES services (id)
-        ON DELETE CASCADE
+    PRIMARY KEY (id)
 );
 
 ALTER TABLE orders
@@ -120,6 +113,8 @@ ALTER TABLE orders
     MODIFY COLUMN order_number CHAR(5) COMMENT 'Number of the order',
     MODIFY COLUMN order_date DATE COMMENT 'Date of the order accepting';
 
+ALTER TABLE orders ADD FOREIGN KEY (customer_id) REFERENCES customers (id) ON DELETE CASCADE;
+ALTER TABLE orders ADD FOREIGN KEY (service_id) REFERENCES services (id) ON DELETE CASCADE;
 
 CREATE TABLE IF NOT EXISTS specialist
 (
@@ -136,11 +131,7 @@ CREATE TABLE IF NOT EXISTS specialist
     services_id bigint,
     business_id bigint,
 
-    PRIMARY KEY (id),
-
-    FOREIGN KEY (city) REFERENCES cities (city_name)
-    ON DELETE CASCADE,
-    CONSTRAINT fk_business_specialist FOREIGN KEY (business_id) REFERENCES businesses(id)
+    PRIMARY KEY (id)
 );
 
 ALTER TABLE specialist
@@ -161,10 +152,12 @@ ALTER TABLE specialist
     MODIFY COLUMN business_id BIGINT COMMENT 'Unique identifier for a business';
 
 
+ALTER TABLE specialist ADD FOREIGN KEY (city) REFERENCES cities (city_name) ON DELETE CASCADE;
+
 # Table for many-to-many relationships
 CREATE TABLE orders_services (
-  orders_service_id bigint,
-  services_id bigint,
+  orders_service_id bigint NOT NULL,
+  services_id bigint NOT NULL,
   PRIMARY KEY (orders_service_id, services_id)
 );
 
@@ -174,8 +167,8 @@ ALTER TABLE orders_services ADD FOREIGN KEY (services_id) REFERENCES services (i
 
 
 CREATE TABLE customers_services (
-  customers_id bigint,
-  services_id_customer bigint,
+  customers_id bigint NOT NULL,
+  services_id_customer bigint NOT NULL,
   PRIMARY KEY (customers_id, services_id_customer)
 );
 
@@ -184,8 +177,8 @@ ALTER TABLE customers_services ADD FOREIGN KEY (customers_id) REFERENCES custome
 ALTER TABLE customers_services ADD FOREIGN KEY (services_id_customer) REFERENCES services (id_customer);
 
 CREATE TABLE services_specialist (
-  services_id bigint,
-  specialist_service_id bigint,
+  services_id bigint NOT NULL,
+  specialist_service_id bigint NOT NULL,
   PRIMARY KEY (services_id, specialist_service_id)
 );
 
