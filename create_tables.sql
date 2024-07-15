@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS businesses
 (
     id           varchar(36) NOT NULL,
     name         varchar(255),
-    service_name varchar(255) UNIQUE,
+    service_name varchar(255),
     password     varchar(128),
     field        varchar(10),
 
@@ -88,9 +88,6 @@ ALTER TABLE services
     MODIFY COLUMN price decimal(10, 2) COMMENT 'Price of a service',
     MODIFY COLUMN city VARCHAR(50) COMMENT 'City of a service';
 
-ALTER TABLE services ADD FOREIGN KEY (name) REFERENCES businesses (service_name) ON DELETE CASCADE;
-ALTER TABLE services ADD FOREIGN KEY (city) REFERENCES cities (city_name) ON DELETE CASCADE;
-
 CREATE TABLE IF NOT EXISTS orders
 (
     id           varchar(36) NOT NULL,
@@ -165,6 +162,11 @@ ALTER TABLE orders ADD FOREIGN KEY (service_id) REFERENCES services (id) ON DELE
 ALTER TABLE orders_services ADD FOREIGN KEY (orders_service_id) REFERENCES orders (service_id);
 
 ALTER TABLE orders_services ADD FOREIGN KEY (services_id) REFERENCES services (id);
+
+CREATE INDEX `service_name_index` ON businesses(service_name);
+ALTER TABLE services ADD FOREIGN KEY (name) REFERENCES businesses (service_name) ON DELETE CASCADE;
+
+ALTER TABLE services ADD FOREIGN KEY (city) REFERENCES cities (city_name) ON DELETE CASCADE;
 
 
 CREATE TABLE customers_services (
