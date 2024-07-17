@@ -7,7 +7,6 @@ CREATE PROCEDURE field_analysis ()
 
             SELECT COUNT(field) INTO field_num FROM businesses;
             SELECT COUNT(id) INTO service_num FROM services;
-
        END//
 
 

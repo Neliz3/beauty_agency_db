@@ -1,15 +1,11 @@
 USE beauty_agency;
 
--- view for a customer
-CREATE OR REPLACE VIEW
-AS
-EXPLAIN ANALYZE SELECT
+/* view for a manager*/
+CREATE OR REPLACE VIEW manager_view AS
+SELECT
   services.name,
-  customers.age,
   count(orders.ID)
-FROM customers
-JOIN services
-  ON services.id = customers.preference_service
-JOIN orders
-  ON orders.service_id = services.ID
+FROM services
+JOIN orders ON orders.service_id = services.ID
+GROUP BY services.name
 ;

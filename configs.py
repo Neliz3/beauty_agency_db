@@ -34,9 +34,9 @@ def create_connection():
 
 def timer(func):
     def wrapper():
-        start = datetime.now()
+        start = datetime.now().microsecond
         func()
-        end = datetime.now()
+        end = datetime.now().microsecond
         result = end - start
-        print(f'Execution time: {result.microseconds}.')
+        print(f'Execution time: {result}.')
     return wrapper
