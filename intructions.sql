@@ -1,21 +1,20 @@
 delimiter //
 
-CREATE PROCEDURE field_analysis ()
+drop procedure field_analysis;
+CREATE procedure field_analysis (out field_num int, out service_num int)
        BEGIN
-            declare field_num int;
-            declare service_num int;
-
             SELECT COUNT(field) INTO field_num FROM businesses;
             SELECT COUNT(id) INTO service_num FROM services;
        END//
 
 
-CREATE FUNCTION CallProcedure(times INT) RETURNS INT
+drop function ChangeDate;
+CREATE FUNCTION ChangeDate(date_row date) RETURNS VARCHAR(10)
+    DETERMINISTIC
 BEGIN
-    DECLARE i INT DEFAULT 1;
-    WHILE i <= times DO
-        CALL field_analysis();
-        SET i = i + 1;
-    END WHILE;
-    RETURN CONCAT('FUNCTION WAS CALLED ', @i);
+    DECLARE formatted_date VARCHAR(10);
+    set formatted_date = DATE_FORMAT(date_row, '%d.%m.%y');
+    RETURN formatted_date;
 END //
+
+/*select ChangeDate(order_date) from orders;*/
